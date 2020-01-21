@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Title</title>
+    <title>SOLID</title>
     <meta charset="utf-8">
     <style>
       @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
@@ -15,6 +15,8 @@
       }
       .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
     </style>
+	<link rel="stylesheet"
+      href="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/styles/default.min.css">
   </head>
   <body>
     <textarea id="source">
@@ -48,13 +50,121 @@ class: center, middle
 
 ---
 
+# O que é SOLID ?
+
+## S - Single Responsability
+
+## O - Open Close
+## L - Liskov Subsctitution Principle 
+## I - Interface Segregation
+## D - Dependency Inversion
+
+???
+General 
+
+---
+
+# O que é SOLID ?
+
+## S - Responsabilidade Única
+## O - Aberto para Extensão e Fechado para Alteração
+## L - Principio de Substituição de Liskov
+## I - Segregação de Interface
+## D - Inversão de Dependencia
+
+---
+
+# S => Responsabilidade Única
+
+## Único
+
+* Um endpoint executa muitiplas ações
+
+## Conciso
+
+> "reduzido ao essencial; em poucas palavras (diz-se de escritos, ideias, discurso etc.); preciso, sucinto, resumido."
+
+* 
+
+
+---
+
+# Multi Responsabilidades
+
+```typescript
+import mysql from "mysql";
+
+export interface IUserData {
+  name: string;
+  address: string;
+  email: string;
+}
+export async function registerNewClient(data: IUserData): Promise<IUserData> {
+  const con = mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    password: "123456",
+    database: "test"
+  });
+  return new Promise<IUserData>((resolve, reject) => {
+    con.connect(function(err) {
+      if (err) return reject(err);
+      console.log("Connected!");
+      const { name, address, email } = data;
+      const sql = `INSERT INTO customers (name, address, email) VALUES ('${name}', '${address}', '${email}')`;
+*      con.query(sql, function(err) {
+        if (err) return reject(err);
+        console.log("1 record inserted");
+        resolve(data);
+      });
+    });
+  });
+}
+
+```
+
+---
+
+# Responsabilidade Única
+
+
+```typescript
+import { MysqlDatasource } from "./MysqlDatasource";
+
+export interface IUserData {
+  name: string;
+  address: string;
+  email: string;
+}
+export async function registerNewClient(data: IUserData): Promise<IUserData> {
+  const { name, address, email } = data;
+  const sql = `INSERT INTO customers (name, address, email)
+         VALUES ('${name}', '${address}', '${email}')
+  `;
+  return new MysqlDatasource().executeQuery(sql);
+}
+
+```
+
 # Introduction
 
 </textarea>
     <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+	<script
+	 charset="UTF-8"
+	 src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.9/languages/go.min.js"></script>
+	<script src="//cdn.jsdelivr.net/gh/highlightjs/cdn-release@9.18.0/build/highlight.min.js"></script>
     </script>
     <script>
-      var slideshow = remark.create();
+      // leve => tomorrow
+      // power => sunburst
+      // arta idea magula rainbow vs
+      var style = 'googlecode';
+      var slideshow = remark.create({
+        highlightLanguage: 'typescript',
+        highlightLines: true,
+        highlightStyle: style,
+      });
     </script>
   </body>
 </html>
