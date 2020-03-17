@@ -38,22 +38,23 @@ class: center, middle
 # Agenda
 
 1.  O que é SOLID
-2.  A fabrica de bugs
-3.  Resolvendo o problema
-4.  Porque a solução é ruim
+2.  Vantagens
+3.  Desvantagens
 5.  Uma estruturação diferente para o SOLID
-6.  Single Responsability
-7.  Open Close
-8.  Liskov Subsctitution Principle
 9.  Interface segregation
 10. Dependency Inversion
+8.  Liskov Subsctitution Principle
+7.  Open Close
+6.  Single Responsability
+
+???
+Reordenar
 
 ---
 
 # O que é SOLID ?
 
 ## S - Single Responsability
-
 ## O - Open Close
 ## L - Liskov Subsctitution Principle 
 ## I - Interface Segregation
@@ -64,13 +65,38 @@ General
 
 ---
 
-# O que é SOLID ?
+# Nova estrutura
 
-## S - Responsabilidade Única
-## O - Aberto para Extensão e Fechado para Alteração
-## L - Principio de Substituição de Liskov
-## I - Segregação de Interface
-## D - Inversão de Dependencia
+
+```
+   _____    ____    _        _____   _____  
+|_   _| |  __ \   / __ \  | |       / ____|
+  | |   | |  | | | |  | | | |      | (___  
+  | |   | |  | | | |  | | | |       \___ \ 
+ _| |_  | |__| | | |__| | | |____   ____) |
+|_____| |_____/   \____/  |______| |_____/ 
+                                            
+```
+
+---
+
+![Right-aligned image](https://images-na.ssl-images-amazon.com/images/G/01/img15/pet-products/small-tiles/23695_pets_vertical_store_dogs_small_tile_8._CB312176604_.jpg)]
+
+---
+
+---
+
+# Vantagens
+
+## Manutenibilidade
+
+## Reuso de código
+
+## Facilidade de compreenção do código
+
+---
+
+# Desvantagens
 
 ---
 
@@ -84,12 +110,113 @@ General
 
 > "reduzido ao essencial; em poucas palavras (diz-se de escritos, ideias, discurso etc.); preciso, sucinto, resumido."
 
-* 
-
 
 ---
 
+# Responsabilidade de Negocio vs Responsabilidade de Codigo
+
+![Árvore de Chamadas](https://edgardleal.github.io/SOLID/img/function_call_tree.png)
+
+---
+
+# V1 - Implementação inicial
+
+```
+
+const express = require('express');
+const axios = require('axios');
+
+const server = express();
+
+const PORT = process.env.PORT || 3000;
+
+server.get('/users', (req, res) => {
+  axios.get('http://users:3000/')
+    .then(res.json)
+    .catch(res.json);
+});
+
+server.listen(PORT, (err) => {
+  if (err) {
+    console.error(err);
+  }
+  console.log(`Listeining on port ${PORT}`);
+});
+
+```
+
+---
+
+# V2 - Implementando a Resiliência
+
+```
+
+server.get('/users', (req, res) => {
+  const instance = axios.create({
+    baseURL: 'http://users:3000',
+    timeout: 800,
+  });
+  instance.get('/')
+    .then(response => response.data)
+    .then(res.json.bind(res))
+    .catch((error: AxiosError) => {
+
+      const retry = () => {
+        return instance.get('/').then(response => response.data);
+      };
+      console.error(error.message);
+
+      retry().then(res.json.bind(res)).catch(e => {
+        retry().then(res.json.bind(res)).catch(error => {
+          res.status((error.response || { status: 500 }).status);
+          console.error(error.message);
+          res.end(error.message);
+        });
+      });
+    });
+});
+
+```
+
+---
+
+exclude: true
+
+# V3 - Dividindo as Responsabilidades
+
+```typescript
+let _instance;
+function getInstance() {
+  if (!_instance) {
+    _instance = axios.create({
+      baseURL: 'http://users:3000',
+      timeout: 800,
+    });
+  }
+  return _instance;
+}
+
+function tryRequest(req, res, tries = 0) {
+  return getInstance().get('/')
+    .then(res.json.bind(res))
+    .catch((error: AxiosError) => {
+      if (tries < 20) {
+        tryRequest(req, res, tries + 1);
+      } else {
+        res.status((error.response || { status: 500 }).status);
+        res.end(error.message);
+      }
+    });
+}
+server.get('/users', tryRequest);
+```
+
+---
+
+exclude: true
+
 # Multi Responsabilidades
+
 
 ```typescript
 import mysql from "mysql";
@@ -124,6 +251,8 @@ export async function registerNewClient(data: IUserData): Promise<IUserData> {
 ```
 
 ---
+
+exclude: true
 
 # Responsabilidade Única
 
