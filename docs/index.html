@@ -40,6 +40,10 @@ class: center, middle
                                             
 ```
 
+???
+vou apresentar meu ponto de vista sobre SOLID
+Eu posso estar errado
+
 ---
 
 # Agenda
@@ -88,10 +92,15 @@ const result: any[] = await axios.get('/users').response.data.data.users;
 
 ```TypeScript
 interface IUser {...}
+
 interface IHttpClient {...}
+
 class EmptyWhen404HttpClient implements IHttpClient {...}
+
 // ====================
+
 const client: IHttpClient = new EmptyWhen404HttpClient();
+
 const result: IUser[] = await client.get('/users');
 ```
 
@@ -140,6 +149,15 @@ Link para a apresentação de James no final
 ---
 
 # Na prática
+
+## É normal começar com rabisco
+
+![Scriblle](https://raw.githubusercontent.com/edgardleal/SOLID/master/docs/img/michelangelo8-scriblle.jpg)
+
+???
+Um erro é achar que o código começa perfeito
+
+---
 
 ## Separando as coisas
 
@@ -248,7 +266,7 @@ Vantagens e Desvantagens da simplicidade
 
 # D - Dependency Inversion
 
-TODO
+.center[![Sticky Code](https://edgardleal.github.io/SOLID/img/sticky.jpg)]
 
 ---
 
