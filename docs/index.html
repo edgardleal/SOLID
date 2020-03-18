@@ -75,9 +75,48 @@ Definição básica de cada item
 
 # Desvantagens
 
-### Verbosidade
-### Complexidade ?
+---
+
+# Verbosidade
+
+
+```TypeScript
+const result: any[] = await axios.get('/users').response.data.data.users;
+```
+
+### VS
+
+```TypeScript
+interface IUser {...}
+interface IHttpClient {...}
+class EmptyWhen404HttpClient implements IHttpClient {...}
+// ====================
+const client: IHttpClient = new EmptyWhen404HttpClient();
+const result: IUser[] = await client.get('/users');
+```
+
+???
+
+---
+
+# Complexidade ?
+
 > "É melhor ficar  travado no test do que travar o time todo" - James
+
+???
+É realmente complexo ?
+Isso é argumento de alguns.
+
+---
+
+# Perfeccionismo ( Preciosismo )
+
+![Losting time](https://raw.githubusercontent.com/edgardleal/SOLID/master/docs/img/perfecionismo.jpg)
+
+???
+É preciso saber quando esta sendo exagerado
+
+---
 
 ### Boilerplate
 ### Orientação a Objetos
@@ -108,9 +147,24 @@ Link para a apresentação de James no final
 
 .left[![Lights](https://raw.githubusercontent.com/edgardleal/SOLID/master/docs/img/lights.jpeg)]
 
-### LID
+???
+São regras para validar o que esta sendo feito
+Precisam do LID para funcionar bem
+
+---
+
+# LID
+
+## Liskov
+
+## Interface Segregation
+
+## Dependency Inversion
 
 .left[![Lights](https://raw.githubusercontent.com/edgardleal/SOLID/master/docs/img/men-working.jpg)]
+
+???
+Liskov nesta lista é principalmente importante para mim
 
 ---
 
@@ -189,6 +243,22 @@ Vantagens e Desvantagens da simplicidade
 
 > "reduzido ao essencial; em poucas palavras (diz-se de escritos, ideias, discurso etc.); preciso, sucinto, resumido."
 
+
+---
+
+# D - Dependency Inversion
+
+TODO
+
+---
+
+# I - Interface Segregation
+
+.center[![Interface World](https://edgardleal.github.io/SOLID/img/gorilla_holding_banana.jpg)]
+
+???
+Verbosidade pode ser boa
+De nomes grandes mesmo
 
 ---
 
@@ -365,6 +435,10 @@ export async function registerNewClient(data: IUserData): Promise<IUserData> {
 ### Arquitetura limpa 
 
 * https://pt.slideshare.net/jamersonweb/arquitetura-limpa-131970246
+
+### Slides
+
+* https://github.com/edgardleal/SOLID
 
 ```
 
