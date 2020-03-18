@@ -170,6 +170,33 @@ axios.get('/users');
 
 ---
 
+# V2 - Implementando a Resiliência
+
+```
+
+axios.get('/users')
+  .then(response => response.data)
+  .then(res.json.bind(res))
+  .catch((error: AxiosError) => {
+
+    const retry = () => {
+      return instance.get('/').then(response => response.data);
+    };
+    console.error(error.message);
+
+    retry().then(res.json.bind(res)).catch(e => {
+      retry().then(res.json.bind(res)).catch(error => {
+        res.status((error.response || { status: 500 }).status);
+        console.error(error.message);
+        res.end(error.message);
+      });
+    });
+  });
+
+```
+
+---
+
 ### Isso é comum ?
 
 ```
@@ -285,11 +312,27 @@ De nomes grandes mesmo
 
 ---
 
+# O - Open Close
+
+
+```bash
+     # 22 package-lock.json
+     # 22 src/modules/courses/schemas/courses.schema.ts
+     26 src/modules/levels/levels.controller.test.ts
+     26 src/modules/utils/factory.ts
+     30 src/modules/courses/courses.controller.test.ts
+     # 32 package.json
+     32 src/modules/courses/courses.controller.ts
+     34 src/app.ts
+     38 src/datasources/rabbitmq.datasource.ts
+     66 src/modules/events/user-event.service.ts
+    557
+```
+
+---
+
 # S => Responsabilidade Única
 
-## Único
-
-* Um endpoint executa muitiplas ações
 
 ## Conciso
 
@@ -304,41 +347,7 @@ De nomes grandes mesmo
 
 ---
 
-# V2 - Implementando a Resiliência
-
-```
-
-server.get('/users', (req, res) => {
-  const instance = axios.create({
-    baseURL: 'http://users:3000',
-    timeout: 800,
-  });
-  instance.get('/')
-    .then(response => response.data)
-    .then(res.json.bind(res))
-    .catch((error: AxiosError) => {
-
-      const retry = () => {
-        return instance.get('/').then(response => response.data);
-      };
-      console.error(error.message);
-
-      retry().then(res.json.bind(res)).catch(e => {
-        retry().then(res.json.bind(res)).catch(error => {
-          res.status((error.response || { status: 500 }).status);
-          console.error(error.message);
-          res.end(error.message);
-        });
-      });
-    });
-});
-
-```
-
----
-
 # Multi Responsabilidades
-
 
 ```typescript
 import mysql from "mysql";
