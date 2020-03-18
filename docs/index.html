@@ -38,6 +38,7 @@ class: center, middle
 # Agenda
 
 1.  O que é SOLID
+2.  Problemas de não termos SOLID
 2.  Vantagens
 3.  Desvantagens
 5.  Uma estruturação diferente para o SOLID
@@ -61,7 +62,62 @@ Reordenar
 ## D - Dependency Inversion
 
 ???
-General 
+Definição básica de cada item
+
+---
+
+# Desvantagens
+
+### Verbosidade
+### Complexidade ?
+### Boilerplate
+### Orientação a Objetos
+
+???
+Ressaltar a complexidade expalhada
+
+---
+
+# Vantagens
+
+### Facilidade de uso com Arquitetura Limpa
+
+### Reutilização de código
+
+### Testabilidade
+
+???
+Link para a apresentação de James no final
+
+---
+
+# Problemas que podem ser resolvidos
+
+```js
+function getUsers() {
+  return axios.get('/users');
+}
+```
+
+## Problemas com esta implementação
+
+* Falta tratamento de erro
+* Se receber 404 retorna null?
+* Se receber 502/503/504 tenta novamente?
+
+### Isso é comum ?
+
+```
+ag 'axios.get\(' | wc -l
+```
+
+#### Resultado
+
+* 62 dentro de casinha
+* 215 dentro dos projetos da sanar ( em minha máquina )
+
+???
+Vantagens e Desvantagens da simplicidade
 
 ---
 
@@ -80,7 +136,7 @@ General
 
 ---
 
-![Right-aligned image](https://images-na.ssl-images-amazon.com/images/G/01/img15/pet-products/small-tiles/23695_pets_vertical_store_dogs_small_tile_8._CB312176604_.jpg)]
+![American Idols](https://raw.githubusercontent.com/edgardleal/SOLID/master/docs/img/idols.jpg)]
 
 ---
 
@@ -180,6 +236,12 @@ server.get('/users', (req, res) => {
 
 ---
 
+# L - Princípio da Substituição de Liskov
+
+![LID](https://raw.githubusercontent.com/edgardleal/SOLID/master/docs/img/Liskov_DI_IS.jpg)
+
+---
+
 exclude: true
 
 # V3 - Dividindo as Responsabilidades
@@ -272,6 +334,14 @@ export async function registerNewClient(data: IUserData): Promise<IUserData> {
   `;
   return new MysqlDatasource().executeQuery(sql);
 }
+
+---
+
+# Referencias
+
+### Arquitetura limpa 
+
+* https://pt.slideshare.net/jamersonweb/arquitetura-limpa-131970246
 
 ```
 
