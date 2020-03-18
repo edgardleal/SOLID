@@ -23,6 +23,10 @@ span.left img {
   width: 130px;
 }
 
+.image img {
+  width: 500px;
+}
+
 </style>
   </head>
   <body>
@@ -143,8 +147,42 @@ Ressaltar a complexidade expalhada
 
 ### Testabilidade
 
+### Manutenibilidade
+
+### Facilidade de compreenção do código
+
 ???
 Link para a apresentação de James no final
+
+---
+
+# Problemas que podem ser resolvidos
+
+```js
+axios.get('/users');
+```
+
+## Problemas com esta implementação
+
+* Falta tratamento de erro
+* Se receber 404 retorna null?
+* Se receber 502/503/504 tenta novamente?
+
+---
+
+### Isso é comum ?
+
+```
+ag 'axios.get\(' | wc -l
+```
+
+#### Resultado
+
+* 62 dentro de casinha
+* 215 dentro dos projetos da sanar ( em minha máquina )
+
+???
+Vantagens e Desvantagens da simplicidade
 
 ---
 
@@ -152,16 +190,55 @@ Link para a apresentação de James no final
 
 ## É normal começar com rabisco
 
-![Scriblle](https://raw.githubusercontent.com/edgardleal/SOLID/master/docs/img/michelangelo8-scriblle.jpg)
+.image[![Scriblle](https://raw.githubusercontent.com/edgardleal/SOLID/master/docs/img/michelangelo8-scriblle.jpg)]
 
 ???
 Um erro é achar que o código começa perfeito
 
 ---
 
+# Nova estrutura
+
+
+```
+ _____   _____      __    ___        _____  
+|_   _| |  __ \   / __ \  | |       / ____|
+  | |   | |  | | | |  | | | |      | (___  
+  | |   | |  | | | |  | | | |       \___ \ 
+ _| |_  | |__| | | |__| | | |____   ____) |
+|_____| |_____/   \____/  |______| |_____/ 
+                                            
+```
+
+---
+
+![American Idols](https://raw.githubusercontent.com/edgardleal/SOLID/master/docs/img/idols.jpg)]
+
+---
+
+# Odem Ideal
+
+```
+ _____    _____   _          __      _____  
+|  __ \  |_   _| | |       / __ \   / ____|
+| |  | |   | |   | |      | |  | | | (___  
+| |  | |   | |   | |      | |  | |  \___ \ 
+| |__| |  _| |_  | |____  | |__| |  ____) |
+|_____/  |_____| |______|  \____/  |_____/ 
+```
+
+???
+Dependency Inversion
+Interface Segregation
+Liskov
+Open Close
+Single Responsability
+
+---
+
 ## Separando as coisas
 
-### SOL 🌞 
+### SOL 🌞 ( ID )
 
 .left[![Lights](https://raw.githubusercontent.com/edgardleal/SOLID/master/docs/img/lights.jpeg)]
 
@@ -186,84 +263,6 @@ Liskov nesta lista é principalmente importante para mim
 
 ---
 
-# Problemas que podem ser resolvidos
-
-```js
-function getUsers() {
-  return axios.get('/users');
-}
-```
-
-## Problemas com esta implementação
-
-* Falta tratamento de erro
-* Se receber 404 retorna null?
-* Se receber 502/503/504 tenta novamente?
-
-### Isso é comum ?
-
-```
-ag 'axios.get\(' | wc -l
-```
-
-#### Resultado
-
-* 62 dentro de casinha
-* 215 dentro dos projetos da sanar ( em minha máquina )
-
-???
-Vantagens e Desvantagens da simplicidade
-
----
-
-# Nova estrutura
-
-
-```
-   _____    ____    _        _____   _____  
-|_   _| |  __ \   / __ \  | |       / ____|
-  | |   | |  | | | |  | | | |      | (___  
-  | |   | |  | | | |  | | | |       \___ \ 
- _| |_  | |__| | | |__| | | |____   ____) |
-|_____| |_____/   \____/  |______| |_____/ 
-                                            
-```
-
----
-
-![American Idols](https://raw.githubusercontent.com/edgardleal/SOLID/master/docs/img/idols.jpg)]
-
----
-
----
-
-# Vantagens
-
-## Manutenibilidade
-
-## Reuso de código
-
-## Facilidade de compreenção do código
-
----
-
-# Desvantagens
-
----
-
-# S => Responsabilidade Única
-
-## Único
-
-* Um endpoint executa muitiplas ações
-
-## Conciso
-
-> "reduzido ao essencial; em poucas palavras (diz-se de escritos, ideias, discurso etc.); preciso, sucinto, resumido."
-
-
----
-
 # D - Dependency Inversion
 
 .center[![Sticky Code](https://edgardleal.github.io/SOLID/img/sticky.jpg)]
@@ -280,37 +279,28 @@ De nomes grandes mesmo
 
 ---
 
-# Responsabilidade de Negocio vs Responsabilidade de Codigo
+# L - Princípio da Substituição de Liskov
 
-![Árvore de Chamadas](https://edgardleal.github.io/SOLID/img/function_call_tree.png)
+![LID](https://raw.githubusercontent.com/edgardleal/SOLID/master/docs/img/Liskov_DI_IS.jpg)
 
 ---
 
-# V1 - Implementação inicial
+# S => Responsabilidade Única
 
-```
+## Único
 
-const express = require('express');
-const axios = require('axios');
+* Um endpoint executa muitiplas ações
 
-const server = express();
+## Conciso
 
-const PORT = process.env.PORT || 3000;
+> "reduzido ao essencial; em poucas palavras (diz-se de escritos, ideias, discurso etc.); preciso, sucinto, resumido."
 
-server.get('/users', (req, res) => {
-  axios.get('http://users:3000/')
-    .then(res.json)
-    .catch(res.json);
-});
 
-server.listen(PORT, (err) => {
-  if (err) {
-    console.error(err);
-  }
-  console.log(`Listeining on port ${PORT}`);
-});
+---
 
-```
+# Responsabilidade de Negocio vs Responsabilidade de Codigo
+
+![Árvore de Chamadas](https://edgardleal.github.io/SOLID/img/function_call_tree.png)
 
 ---
 
@@ -346,47 +336,6 @@ server.get('/users', (req, res) => {
 ```
 
 ---
-
-# L - Princípio da Substituição de Liskov
-
-![LID](https://raw.githubusercontent.com/edgardleal/SOLID/master/docs/img/Liskov_DI_IS.jpg)
-
----
-
-exclude: true
-
-# V3 - Dividindo as Responsabilidades
-
-```typescript
-let _instance;
-function getInstance() {
-  if (!_instance) {
-    _instance = axios.create({
-      baseURL: 'http://users:3000',
-      timeout: 800,
-    });
-  }
-  return _instance;
-}
-
-function tryRequest(req, res, tries = 0) {
-  return getInstance().get('/')
-    .then(res.json.bind(res))
-    .catch((error: AxiosError) => {
-      if (tries < 20) {
-        tryRequest(req, res, tries + 1);
-      } else {
-        res.status((error.response || { status: 500 }).status);
-        res.end(error.message);
-      }
-    });
-}
-server.get('/users', tryRequest);
-```
-
----
-
-exclude: true
 
 # Multi Responsabilidades
 
@@ -425,29 +374,6 @@ export async function registerNewClient(data: IUserData): Promise<IUserData> {
 
 ---
 
-exclude: true
-
-# Responsabilidade Única
-
-
-```typescript
-import { MysqlDatasource } from "./MysqlDatasource";
-
-export interface IUserData {
-  name: string;
-  address: string;
-  email: string;
-}
-export async function registerNewClient(data: IUserData): Promise<IUserData> {
-  const { name, address, email } = data;
-  const sql = `INSERT INTO customers (name, address, email)
-         VALUES ('${name}', '${address}', '${email}')
-  `;
-  return new MysqlDatasource().executeQuery(sql);
-}
-
----
-
 # Referencias
 
 ### Arquitetura limpa 
@@ -458,9 +384,6 @@ export async function registerNewClient(data: IUserData): Promise<IUserData> {
 
 * https://github.com/edgardleal/SOLID
 
-```
-
-# Introduction
 
 </textarea>
     <script src="https://remarkjs.com/downloads/remark-latest.min.js">
